@@ -65,31 +65,6 @@ class Recipe(models.Model):
         return self.name
 
 
-class UserRecipeRelation(models.Model):
-    """Модель связи пользователя с рецептом."""
-
-    user: models.ForeignKey = models.ForeignKey(
-        CustomUser,
-        on_delete=models.CASCADE,
-        verbose_name='Пользователь'
-    )
-    recipe: models.ForeignKey = models.ForeignKey(
-        Recipe,
-        on_delete=models.CASCADE,
-        verbose_name='Рецепт'
-    )
-
-    class Meta:
-        abstract = True
-        constraints = [
-            models.UniqueConstraint(fields=['user', 'recipe',],
-                                    name='%(class)s_unique')
-        ]
-
-    def __str__(self):
-        return f'{self.user} -> {self.recipe}'
-
-
 class IngredientInRecipe(models.Model):
     """Модель связи ингридиентов и рецептов."""
 
@@ -142,7 +117,7 @@ class ShoppingCart(models.Model):
         ]
 
 
-class Favorite(models.Model):
+class Favorites(models.Model):
     """Модель избранных рецептов пользователя."""
 
     user: models.ForeignKey = models.ForeignKey(

@@ -1,8 +1,8 @@
-from rest_framework import serializers
+from rest_framework import serializers, status
 from drf_extra_fields.fields import Base64ImageField
 from djoser.serializers import UserSerializer
 from users.models import CustomUser, Subscription
-from recipes.serializers import ShortRecipeSerializer
+from recipes.models import Recipe
 
 
 class UserProfileSerializer(UserSerializer):
@@ -15,12 +15,11 @@ class UserProfileSerializer(UserSerializer):
         model = CustomUser
         fields = UserSerializer.Meta.fields + ('avatar', 'is_subscribed')
 
-    def get_has_subscription(self, instance):
-        current_user = self.context.get('request').user
-        return (
-            current_user.is_authenticated
-            and instance.authors.filter(user=current_user).exists()
-        )
+    def get_is_subscribed(self, instance):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            return instance.authors.filter(user=request.user).exists()
+        return False
 
 
 class AvatarUpdateSerializer(serializers.ModelSerializer):
@@ -85,3 +84,11 @@ class AuthorDetailSerializer(UserProfileSerializer):
             many=True,
             context=self.context
         ).data
+
+
+class ShortRecipeSerializer(serializers.ModelSerializer):
+    """Сериализатор для краткого представления рецепта."""
+
+    class Meta:
+        model = Recipe
+        fields = ('id', 'name', 'image', 'cooking_time')

@@ -6,7 +6,7 @@ from recipes.models import (Ingredient,
                             IngredientInRecipe,
                             Favorites,
                             ShoppingCart)
-from users.serializers import UserProfileSerializer
+from users.serializers import UserProfileSerializer, ShortRecipeSerializer
 
 
 class RecipeIngredientSerializer(serializers.ModelSerializer):
@@ -183,19 +183,3 @@ class ShoppingCartSerializer(UserRecipeActionSerializer):
             fields=('user', 'recipe'),
             message='Рецепт уже в корзине'
         )]
-
-
-class ShortRecipeSerializer(serializers.ModelSerializer):
-    """Сериализатор для краткого представления рецепта."""
-
-    class Meta:
-        model = Recipe
-        fields = ('id', 'name', 'image', 'cooking_time')
-
-
-class IngredientListSerializer(serializers.ModelSerializer):
-    """Сериализатор для списка ингредиентов."""
-
-    class Meta:
-        model = Ingredient
-        fields = ('id', 'name', 'measurement_unit')

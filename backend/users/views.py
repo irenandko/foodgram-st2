@@ -1,10 +1,10 @@
-from rest_framework import viewsets, status
+from rest_framework import status
 from djoser.views import UserViewSet
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.shortcuts import get_object_or_404
-from rest_framework.pagination import PageNumberPagination
+from django.db.models import Count
 from users.models import CustomUser, Subscription
 from users.serializers import (
     UserProfileSerializer,
@@ -16,14 +16,15 @@ from users.serializers import (
 
 class UserProfileViewSet(UserViewSet):
 
-    queryset = CustomUser.objects.all()
+    CustomUser.objects.annotate(
+        recipes_count=Count('recipes', distinct=True)
+    ).order_by('id')
     serializer_class = UserProfileSerializer
-    pagination_class = PageNumberPagination
 
     def get_permissions(self):
         protected_actions = [
             'me',
-            'manage_profile_avatar',
+            'update_profile_avatar',
             'get_subscribed_authors_list',
             'manage_subscription'
         ]
@@ -47,8 +48,8 @@ class UserProfileViewSet(UserViewSet):
     @action(methods=['get'],
             detail=False,
             url_path='me',
-            url_name='get_personal_info')
-    def get_personal_info(self, request):
+            url_name='get_user_info')
+    def get_user_info(self, request):
         """Отображает личные данные текущего пользователя."""
         if not request.user.is_authenticated:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
@@ -58,9 +59,8 @@ class UserProfileViewSet(UserViewSet):
 
     @action(methods=['put', 'delete'],
             detail=False,
-            url_path='me/avatar',
-            url_name='manage_profile_avatar')
-    def manage_profile_avatar(self, request):
+            url_path='me/avatar',)
+    def update_profile_avatar(self, request):
         """Реализует обновление и удаление аватара пользователя."""
         user = request.user
 

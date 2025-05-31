@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from recipes.models import IngredientInRecipe
 
 
-def fetch_ingredients_for_list(user):
+def get_ingredients_for_list(user):
     """Извлекает ингредиенты, необходимые для покупок пользователю."""
     purchase_items = (
         IngredientInRecipe.objects
@@ -15,7 +15,7 @@ def fetch_ingredients_for_list(user):
     return purchase_items
 
 
-def compose_shopping_list_text(items):
+def create_shopping_list_text(items):
     """Составляет текст списка покупок на основе предоставленных данных."""
     lines = []
     for item in items:
@@ -28,8 +28,8 @@ def compose_shopping_list_text(items):
 
 def deliver_shopping_list(user):
     """Создает и отдает HTTP-ответ с файлом списка покупок."""
-    needed_items = fetch_ingredients_for_list(user)
-    shopping_text = compose_shopping_list_text(needed_items)
+    needed_items = get_ingredients_for_list(user)
+    shopping_text = create_shopping_list_text(needed_items)
 
     response = HttpResponse(shopping_text,
                             content_type="text/plain; charset=UTF-8")

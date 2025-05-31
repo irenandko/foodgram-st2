@@ -1,4 +1,4 @@
-from rest_framework import serializers, status
+from rest_framework import serializers
 from drf_extra_fields.fields import Base64ImageField
 from djoser.serializers import UserSerializer
 from users.models import CustomUser, Subscription
@@ -18,7 +18,7 @@ class UserProfileSerializer(UserSerializer):
     def get_is_subscribed(self, instance):
         request = self.context.get('request')
         if request and request.user.is_authenticated:
-            return instance.authors.filter(user=request.user).exists()
+            return instance.subscribers.filter(user=request.user).exists()
         return False
 
 
@@ -33,7 +33,7 @@ class AvatarUpdateSerializer(serializers.ModelSerializer):
 
 
 class SubscribeActionSerializer(serializers.ModelSerializer):
-    """Сериализатор для создания подписки на автора."""
+    """Сериализатор работы с подписками."""
 
     class Meta:
         model = Subscription
@@ -62,8 +62,7 @@ class AuthorDetailSerializer(UserProfileSerializer):
     """Сериализатор для отображения автора с рецептами."""
 
     recipes = serializers.SerializerMethodField()
-    recipes_count = serializers.IntegerField(source='recipes.count',
-                                             read_only=True)
+    recipes_count = serializers.SerializerMethodField()
 
     class Meta:
         model = CustomUser
@@ -75,15 +74,16 @@ class AuthorDetailSerializer(UserProfileSerializer):
         request = self.context.get('request')
         recipes = author.recipes.all()
 
-        if limit := request.query_params.get('recipes_limit'):
-            if limit.isdigit():
-                recipes = recipes[:int(limit)]
+        if request and request.user.is_authenticated:
+            if limit := request.query_params.get('recipes_limit'):
+                if limit.isdigit():
+                    recipes = recipes[:int(limit)]
+        return ShortRecipeSerializer(recipes,
+                                     many=True,
+                                     context=self.context).data
 
-        return ShortRecipeSerializer(
-            recipes,
-            many=True,
-            context=self.context
-        ).data
+    def get_recipes_count(self, obj):
+        return obj.recipes.count()
 
 
 class ShortRecipeSerializer(serializers.ModelSerializer):

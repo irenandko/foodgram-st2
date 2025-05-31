@@ -30,9 +30,9 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [AllowAny]
 
     def get_queryset(self):
-        search_term = self.request.query_params.get('name', '')
-        if search_term:
-            return self.queryset.filter(name__icontains=search_term)
+        search_field = self.request.query_params.get('name', '')
+        if search_field:
+            return self.queryset.filter(name__icontains=search_field)
         return self.queryset
 
 

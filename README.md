@@ -11,7 +11,7 @@
 Проверьте, что Docker работает (Engine running).
 Склонируйте репозиторий с проектом на свой компьютер - в терминале из рабочей директории выполните команду:
 ```
-git clone https://github.com/irenandko/foodgram-st.git
+git clone https://github.com/irenandko/foodgram-st2.git
 ```
 Перейдите в главную директорию проекта
 ```
@@ -69,8 +69,8 @@ docker-compose exec backend python manage.py load_recipe_list
 ```
 
 ## Основные страницы
-Главная страница - http://localhost
-Админка - http://localhost/admin/
+- Главная страница - http://localhost
+- Админка - http://localhost/admin/
 
 * Если Вам отображается приветствие Nginx, попробуйте открыть сайт в режиме Инкогнито (возможен остаточный кэш страниц)
 

@@ -1,9 +1,11 @@
 from rest_framework import status
 from djoser.views import UserViewSet
 from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.shortcuts import get_object_or_404
+from django.db.models import Count
 from users.models import CustomUser, Subscription
 from users.serializers import (
     AvatarUpdateSerializer,
@@ -12,10 +14,28 @@ from users.serializers import (
 )
 
 
+class UserPagination(PageNumberPagination):
+    page_size = 9
+    page_size_query_param = 'limit'
+    max_page_size = 100
+ 
+    def get_ordering(self, request, queryset, view):
+        return ['id']
+
+
 class UserProfileViewSet(UserViewSet):
 
+    queryset = CustomUser.objects.all().order_by('id')
     lookup_field = 'id'
     lookup_url_kwarg = 'id'
+    pagination_class = UserPagination
+
+    def get_queryset(self):
+        if self.action == 'list':
+            return CustomUser.objects.annotate(
+                recipes_count=Count('recipes', distinct=True)
+            ).order_by('id')
+        return CustomUser.objects.all().order_by('id')
 
     def get_permissions(self):
         protected_actions = [
@@ -80,7 +100,7 @@ class UserProfileViewSet(UserViewSet):
     def get_subscribed_authors_list(self, request):
         """Получает список авторов, на которых подписан пользователь."""
         authors = CustomUser.objects.filter(
-            subscribers__user=request.user)
+            subscribers__user=request.user).order_by('id')
         page = self.paginate_queryset(authors)
         serializer = AuthorDetailSerializer(
             page,

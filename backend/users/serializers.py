@@ -74,16 +74,20 @@ class AuthorDetailSerializer(UserProfileSerializer):
         request = self.context.get('request')
         recipes = author.recipes.all()
 
-        if request and request.user.is_authenticated:
-            if limit := request.query_params.get('recipes_limit'):
-                if limit.isdigit():
-                    recipes = recipes[:int(limit)]
+        if limit := request.query_params.get('recipes_limit'):
+            try:
+                recipes = recipes[:int(limit)]
+            except ValueError:
+                pass
         return ShortRecipeSerializer(recipes,
                                      many=True,
                                      context=self.context).data
 
     def get_recipes_count(self, obj):
-        return obj.recipes.count()
+        if hasattr(obj, 'recipes_count'):
+            return obj.recipes_count
+        else:
+            return obj.recipes.count()
 
 
 class ShortRecipeSerializer(serializers.ModelSerializer):

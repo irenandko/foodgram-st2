@@ -107,6 +107,12 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
     def validate(self, data):
         ingredients = self.initial_data.get('ingredients', [])
         self._validate_ingredients(ingredients)
+
+        image = data.get('image')
+        if image is None or image == '':
+            raise serializers.ValidationError(
+                {'image': 'Поле "Фото рецепта" не может быть пустым.'})
+
         return data
 
     def _update_ingredients(self, recipe, ingredients_data):

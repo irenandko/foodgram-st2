@@ -5,7 +5,6 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.shortcuts import get_object_or_404
-from django.db.models import Count
 from users.models import CustomUser, Subscription
 from users.serializers import (
     AvatarUpdateSerializer,
@@ -29,13 +28,6 @@ class UserProfileViewSet(UserViewSet):
     lookup_field = 'id'
     lookup_url_kwarg = 'id'
     pagination_class = UserPagination
-
-    def get_queryset(self):
-        if self.action == 'list':
-            return CustomUser.objects.annotate(
-                recipes_count=Count('recipes', distinct=True)
-            ).order_by('id')
-        return CustomUser.objects.all().order_by('id')
 
     def get_permissions(self):
         protected_actions = [
@@ -84,11 +76,13 @@ class UserProfileViewSet(UserViewSet):
             serializer = AvatarUpdateSerializer(
                 user,
                 data=request.data,
-                partial=True
             )
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response(serializer.errors,
+                                status=status.HTTP_400_BAD_REQUEST)
 
         if user.avatar:
             user.avatar.delete(save=True)

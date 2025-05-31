@@ -14,7 +14,7 @@ from users.serializers import (
 
 
 class UserPagination(PageNumberPagination):
-    page_size = 9
+    page_size = 6
     page_size_query_param = 'limit'
     max_page_size = 100
 
@@ -94,7 +94,7 @@ class UserProfileViewSet(UserViewSet):
     def get_subscribed_authors_list(self, request):
         """Получает список авторов, на которых подписан пользователь."""
         authors = CustomUser.objects.filter(
-            subscribers__user=request.user).order_by('id')
+            authors__user=request.user).order_by('id')
         page = self.paginate_queryset(authors)
         serializer = AuthorDetailSerializer(
             page,

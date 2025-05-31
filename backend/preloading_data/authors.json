@@ -1,0 +1,26 @@
+[
+  {
+    "email": "hahaha@example.com",
+    "username": "iigor",
+    "first_name": "Игорь",
+    "last_name": "Прокопенко",
+    "password": "pbkdf2_sha256$260000$hash",
+    "is_staff": false
+  },
+  {
+    "email": "mimi@example.com",
+    "username": "mimisha",
+    "first_name": "Михаил",
+    "last_name": "Гениевич",
+    "password": "pbkdf2_sha256$260000$hash",
+    "is_staff": false
+  },
+  {
+    "email": "gsgsgsg@example.com",
+    "username": "poppy",
+    "first_name": "Катюша",
+    "last_name": "Ковальских",
+    "password": "pbkdf2_sha256$260000$hash",
+    "is_staff": false
+  }
+]

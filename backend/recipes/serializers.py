@@ -27,7 +27,7 @@ class RecipeIngredientSerializer(serializers.ModelSerializer):
     )
     amount = serializers.IntegerField(
         min_value=1,
-        max_value=100
+        max_value=10000
     )
 
     class Meta:

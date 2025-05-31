@@ -1,0 +1,184 @@
+[
+  {
+    "name": "Паста Карбонара",
+    "text": "Рецепт моей мамы, вы будете в шоке.",
+    "cooking_time": 25,
+    "author": "iigor",
+    "ingredients": [
+      {
+        "name": "спагетти",
+        "amount": 200
+      },
+      {
+        "name": "бекон",
+        "amount": 150
+      },
+      {
+        "name": "сливки",
+        "amount": 100
+      },
+      {
+        "name": "яйца куриные",
+        "amount": 2
+      },
+      {
+        "name": "пармезан",
+        "amount": 50
+      },
+      {
+        "name": "соль",
+        "amount": 5
+      },
+      {
+        "name": "перец",
+        "amount": 3
+      }
+    ],
+    "image": "photos/pasta_carbonara.jpg"
+  },
+  {
+    "name": "Шоколадный торт",
+    "text": "Насыщенный шоколадный торт с кремом, бабулин.",
+    "cooking_time": 60,
+    "author": "iigor",
+    "ingredients": [
+      {
+        "name": "пшеничная мука",
+        "amount": 200
+      },
+      {
+        "name": "сахар",
+        "amount": 200
+      },
+      {
+        "name": "какао",
+        "amount": 50
+      },
+      {
+        "name": "яйца куриные",
+        "amount": 3
+      },
+      {
+        "name": "сливочное масло",
+        "amount": 100
+      }
+    ],
+    "image": "photos/choko_cake.jpg"
+  },
+  {
+    "name": "Салат Цезарь",
+    "text": "Неклассический салат с курицей.",
+    "cooking_time": 20,
+    "author": "poppy",
+    "ingredients": [
+      {
+        "name": "куриное филе",
+        "amount": 200
+      },
+      {
+        "name": "салат романо",
+        "amount": 150
+      },
+      {
+        "name": "сухари",
+        "amount": 50
+      },
+      {
+        "name": "пармезан",
+        "amount": 30
+      },
+      {
+        "name": "подсолнечное масло",
+        "amount": 50
+      }
+    ],
+    "image": "photos/cezar.jpg"
+  },
+  {
+    "name": "Борщ",
+    "text": "Традиционный украинский суп с мясом и овощами.",
+    "cooking_time": 120,
+    "author": "poppy",
+    "ingredients": [
+      {
+        "name": "говядина",
+        "amount": 500
+      },
+      {
+        "name": "свекла",
+        "amount": 300
+      },
+      {
+        "name": "картофель",
+        "amount": 300
+      },
+      {
+        "name": "капуста белокочанная",
+        "amount": 200
+      },
+      {
+        "name": "томатная паста",
+        "amount": 50
+      }
+    ],
+    "image": "photos/borshch.jpg"
+  },
+  {
+    "name": "Пицца Маргарита",
+    "text": "Простая и вкусная пицца с томатами и моцареллой.",
+    "cooking_time": 30,
+    "author": "poppy",
+    "ingredients": [
+      {
+        "name": "пшеничная мука ",
+        "amount": 250
+      },
+      {
+        "name": "дрожжи сухие",
+        "amount": 5
+      },
+      {
+        "name": "томатный соус",
+        "amount": 100
+      },
+      {
+        "name": "моцарелла",
+        "amount": 200
+      },
+      {
+        "name": "базилик свежий",
+        "amount": 10
+      }
+    ],
+    "image": "photos/margo.jpg"
+  },
+  {
+    "name": "Яблочный пирог",
+    "text": "Классический яблочный пирог с корицей.",
+    "cooking_time": 75,
+    "author": "mimisha",
+    "ingredients": [
+      {
+        "name": "пшеничная мука",
+        "amount": 200
+      },
+      {
+        "name": "яблоки",
+        "amount": 500
+      },
+      {
+        "name": "сахар",
+        "amount": 150
+      },
+      {
+        "name": "сливочное масло",
+        "amount": 100
+      },
+      {
+        "name": "корица",
+        "amount": 5
+      }
+    ],
+    "image": "photos/applepie.jpg"
+  }
+]

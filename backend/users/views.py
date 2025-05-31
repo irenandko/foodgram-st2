@@ -17,7 +17,7 @@ class UserPagination(PageNumberPagination):
     page_size = 9
     page_size_query_param = 'limit'
     max_page_size = 100
- 
+
     def get_ordering(self, request, queryset, view):
         return ['id']
 

@@ -16,6 +16,12 @@ from recipes.serializers import (
 )
 from recipes.models import Recipe, Ingredient, Favorites, ShoppingCart
 from recipes.shopping_list import deliver_shopping_list
+from rest_framework.pagination import PageNumberPagination
+
+
+class RecipePagination(PageNumberPagination):
+    page_size = 6
+    page_size_query_param = 'limit'
 
 
 class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
@@ -34,6 +40,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     permission_classes = [IsAuthorOrReadOnly]
     filterset_class = RecipeFilter
+    pagination_class = RecipePagination
 
     def get_serializer_class(self):
         if self.action in ['create', 'update', 'partial_update']:

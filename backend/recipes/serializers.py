@@ -9,6 +9,14 @@ from recipes.models import (Ingredient,
 from users.serializers import UserProfileSerializer, ShortRecipeSerializer
 
 
+class IngredientSerializer(serializers.ModelSerializer):
+    """Сериализатор для представления данных ингредиента."""
+
+    class Meta:
+        model = Ingredient
+        fields = ('id', 'name', 'measurement_unit')
+
+
 class RecipeIngredientSerializer(serializers.ModelSerializer):
     """Сериализатор для ингридиентов в рецепте."""
 
@@ -52,7 +60,7 @@ class RecipeDetailSerializer(serializers.ModelSerializer):
                 'amount': item.amount,
                 'measurement_unit': item.ingredient.measurement_unit
             }
-            for item in recipe.ingredientinrecipe_set.select_related(
+            for item in recipe.ingredients_in_recipe.select_related(
                 'ingredient'
             )
         ]
@@ -102,7 +110,7 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
         return data
 
     def _update_ingredients(self, recipe, ingredients_data):
-        recipe.ingredientinrecipe_set.all().delete()
+        recipe.ingredients_in_recipe.all().delete()
         IngredientInRecipe.objects.bulk_create([
             IngredientInRecipe(
                 recipe=recipe,

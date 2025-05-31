@@ -29,6 +29,9 @@ class UserProfileViewSet(UserViewSet):
         ]
         if self.action in protected_actions:
             return [IsAuthenticated()]
+
+        if self.action == 'create':
+            return [AllowAny()]
         return [AllowAny()]
 
     def perform_create(self, serializer):
@@ -47,6 +50,8 @@ class UserProfileViewSet(UserViewSet):
             url_name='get_personal_info')
     def get_personal_info(self, request):
         """Отображает личные данные текущего пользователя."""
+        if not request.user.is_authenticated:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
         serializer = self.get_serializer(request.user,
                                          context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)

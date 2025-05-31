@@ -10,7 +10,7 @@ from recipes.filters import RecipeFilter
 from recipes.serializers import (
     RecipeDetailSerializer,
     RecipeCreateUpdateSerializer,
-    RecipeIngredientSerializer,
+    IngredientSerializer,
     FavoriteSerializer,
     ShoppingCartSerializer
 )
@@ -20,7 +20,7 @@ from recipes.shopping_list import deliver_shopping_list
 
 class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Ingredient.objects.all()
-    serializer_class = RecipeIngredientSerializer
+    serializer_class = IngredientSerializer
     pagination_class = None
     permission_classes = [AllowAny]
 

@@ -21,7 +21,6 @@ from recipes.shopping_list import deliver_shopping_list
 class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
-    pagination_class = None
     permission_classes = [AllowAny]
 
     def get_queryset(self):
@@ -59,7 +58,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             if serializer_class == FavoriteSerializer:
                 model = Favorites
             else:
-                ShoppingCart
+                model = ShoppingCart
             relation = model.objects.filter(user=request.user, recipe=recipe)
             if not relation.exists():
                 return Response(

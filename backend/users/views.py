@@ -4,10 +4,8 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.shortcuts import get_object_or_404
-from django.db.models import Count
 from users.models import CustomUser, Subscription
 from users.serializers import (
-    UserProfileSerializer,
     AvatarUpdateSerializer,
     SubscribeActionSerializer,
     AuthorDetailSerializer,
@@ -16,10 +14,9 @@ from users.serializers import (
 
 class UserProfileViewSet(UserViewSet):
 
-    CustomUser.objects.annotate(
-        recipes_count=Count('recipes', distinct=True)
-    ).order_by('id')
-    serializer_class = UserProfileSerializer
+    lookup_field = 'id'
+    lookup_url_kwarg = 'id'
+    pagination_class = None
 
     def get_permissions(self):
         protected_actions = [
@@ -83,7 +80,8 @@ class UserProfileViewSet(UserViewSet):
             url_name='get_subscribed_authors')
     def get_subscribed_authors_list(self, request):
         """Получает список авторов, на которых подписан пользователь."""
-        authors = CustomUser.objects.filter(subscribers__user=request.user)
+        authors = CustomUser.objects.filter(
+            subscribers__user=request.user)
         page = self.paginate_queryset(authors)
         serializer = AuthorDetailSerializer(
             page,
@@ -127,7 +125,7 @@ class UserProfileViewSet(UserViewSet):
             detail=True,
             url_path='subscribe',
             url_name='subscription')
-    def manage_subscription(self, request, pk=None):
+    def manage_subscription(self, request, id=None):
         """Управляет подпиской на автора."""
         action = 'subscribe' if request.method == 'POST' else 'unsubscribe'
-        return self._handle_subscription(request, pk, action)
+        return self._handle_subscription(request, id, action)

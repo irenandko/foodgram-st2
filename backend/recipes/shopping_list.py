@@ -7,7 +7,7 @@ def get_ingredients_for_list(user):
     """Извлекает ингредиенты, необходимые для покупок пользователю."""
     purchase_items = (
         IngredientInRecipe.objects
-        .filter(recipe__shopping_carts__user=user)
+        .filter(recipe__shopping_carts__user__pk=user.pk)
         .values('ingredient__name', 'ingredient__measurement_unit')
         .annotate(total_quantity=Sum('amount'))
         .order_by('ingredient__name')

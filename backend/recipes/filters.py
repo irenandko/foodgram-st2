@@ -18,12 +18,12 @@ class RecipeFilter(filters.FilterSet):
         """Фильтрация рецептов по избранному."""
         current_user = self.request.user
         if value and current_user.is_authenticated:
-            return queryset.filter(favorites__user=current_user)
+            return queryset.filter(in_favorites__user=current_user)
         return queryset
 
-    def filter_by_shopping_cart(self, queryset, name, value):
+    def filter_by_shopping_cart(self, queryset, name,  value):
         """Фильтрация рецептов по списку покупок."""
         current_user = self.request.user
         if value and current_user.is_authenticated:
-            return queryset.filter(shopping_carts__user=current_user)
+            return queryset.filter(in_shopping_carts__user=current_user)
         return queryset

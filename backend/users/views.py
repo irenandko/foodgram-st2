@@ -16,7 +16,6 @@ class UserProfileViewSet(UserViewSet):
 
     lookup_field = 'id'
     lookup_url_kwarg = 'id'
-    pagination_class = None
 
     def get_permissions(self):
         protected_actions = [

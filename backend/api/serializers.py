@@ -51,7 +51,7 @@ class SubscribeActionSerializer(serializers.Serializer):
 
     class Meta:
         model = Subscription
-        fields = ('user', 'author',)
+        fields = ('author',)
         validators = [
             serializers.UniqueTogetherValidator(
                 queryset=Subscription.objects.all(),
@@ -124,7 +124,10 @@ class IngredientSerializer(serializers.ModelSerializer):
 class RecipeIngredientSerializer(serializers.ModelSerializer):
     """Сериализатор для ингридиентов в рецепте."""
 
-    id = serializers.ReadOnlyField(source='ingredient.id')
+    id = serializers.PrimaryKeyRelatedField(
+        queryset=Ingredient.objects.all(),
+        source='ingredient'
+    )
     name = serializers.CharField(source='ingredient.name', read_only=True)
     measurement_unit = serializers.CharField(
         source='ingredient.measurement_unit', read_only=True
@@ -212,7 +215,7 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
         IngredientInRecipe.objects.bulk_create([
             IngredientInRecipe(
                 recipe=recipe,
-                ingredient=ingredient_data['id'],
+                ingredient=ingredient_data['ingredient'],
                 amount=ingredient_data['amount']
             )
             for ingredient_data in ingredients_data
@@ -220,7 +223,7 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         ingredients_data = validated_data.pop('ingredients')
-        recipe = Recipe.objects.create(**validated_data)
+        recipe = super().create(validated_data)
         self._set_recipe_ingredients(recipe, ingredients_data)
         return recipe
 

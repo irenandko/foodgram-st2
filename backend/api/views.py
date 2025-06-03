@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.shortcuts import get_object_or_404, redirect
 from django_filters.rest_framework import DjangoFilterBackend
 from django.urls import reverse
-from users.models import CustomUser
+from users.models import CustomUser, Subscription
 from recipes.models import Recipe, Ingredient, Favorites, ShoppingCart
 from .serializers import (
     AvatarUpdateSerializer,
@@ -17,7 +17,8 @@ from .serializers import (
     RecipeCreateUpdateSerializer,
     IngredientSerializer,
     FavoriteSerializer,
-    ShoppingCartSerializer
+    ShoppingCartSerializer,
+    ShortRecipeSerializer
 )
 from recipes.shopping_list import deliver_shopping_list
 from .permissions import IsAuthorOrReadOnly
@@ -116,17 +117,20 @@ class UserProfileViewSet(UserViewSet):
             )
             serializer.is_valid(raise_exception=True)
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            author_serializer = AuthorDetailSerializer(
+                author, context={'request': request})
+            return Response(author_serializer.data,
+                            status=status.HTTP_201_CREATED)
 
-        deleted = request.user.subscribers.get(author=author)
-        deleted.delete()
-
-        if not deleted:
+        try:
+            subscription = request.user.subscribers.get(author=author)
+            subscription.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Subscription.DoesNotExist:
             return Response(
                 {'error': 'Подписка не найдена'},
                 status=status.HTTP_400_BAD_REQUEST
             )
-        return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(methods=['post', 'delete'],
             detail=True,
@@ -181,7 +185,10 @@ class RecipeViewSet(viewsets.ModelViewSet):
             serializer = serializer_class(data=data, context=context)
             serializer.is_valid(raise_exception=True)
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            recipe_serializer = ShortRecipeSerializer(recipe, context=context)
+            return Response(recipe_serializer.data,
+                            status=status.HTTP_201_CREATED)
+
         if operation == 'remove':
             if serializer_class == FavoriteSerializer:
                 model = Favorites

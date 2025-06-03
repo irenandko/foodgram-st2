@@ -6,7 +6,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY', 'django_secret_key')
 
 DEBUG = False
-
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
@@ -110,8 +109,8 @@ DJOSER = {
     "LOGIN_FIELD": "email",
     "HIDE_USERS": False,
     "SERIALIZERS": {
-        'user': 'users.serializers.UserProfileSerializer',
-        'current_user': 'users.serializers.UserProfileSerializer',
+        'user': 'api.serializers.UserProfileSerializer',
+        'current_user': 'api.serializers.UserProfileSerializer',
     },
     "PERMISSIONS": {
         "user": ["rest_framework.permissions.AllowAny"],

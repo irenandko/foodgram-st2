@@ -1,25 +1,26 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator
+from api.constants import MAX_EMAIL_LEN, MAX_USERNAME_LEN
 
 
 class CustomUser(AbstractUser):
     """Класс пользователя."""
 
     first_name = models.CharField(
-        max_length=128,
+        max_length=MAX_USERNAME_LEN,
         verbose_name='Имя')
     last_name = models.CharField(
-        max_length=128,
+        max_length=MAX_USERNAME_LEN,
         verbose_name='Фамилия',
     )
     email = models.EmailField(
-        max_length=128,
+        max_length=MAX_EMAIL_LEN,
         unique=True,
         verbose_name='Электронная почта'
     )
     username = models.CharField(
-        max_length=50,
+        max_length=MAX_USERNAME_LEN,
         unique=True,
         validators=[
             RegexValidator(
@@ -42,6 +43,7 @@ class CustomUser(AbstractUser):
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
         default_related_name = 'users'
+        ordering = ('username',)
 
     def __str__(self):
         return self.username
@@ -65,10 +67,14 @@ class Subscription(models.Model):
 
     class Meta:
         verbose_name = 'Подписка'
-        verbose_name_plural = 'Подписки',
+        verbose_name_plural = 'Подписки'
+        ordering = ('author',)
         constraints = [
             models.UniqueConstraint(
                 fields=['user', 'author',],
                 name='unique_subscription'
             )
         ]
+
+    def __str__(self):
+        return f'{self.user} подписан(-а) на {self.author}'

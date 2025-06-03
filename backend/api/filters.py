@@ -11,7 +11,7 @@ class RecipeFilter(filters.FilterSet):
     author = filters.NumberFilter(field_name='author')
 
     class Meta:
-        model = Recipe
+        model = Recipe 
         fields = ['author',]
 
     def filter_by_favorite(self, queryset, name, value):

@@ -23,12 +23,13 @@ from .serializers import (
 from recipes.shopping_list import deliver_shopping_list
 from .permissions import IsAuthorOrReadOnly
 from .filters import RecipeFilter
+from .constants import MAX_PAGE, PAGE_SIZE
 
 
 class UserPagination(PageNumberPagination):
-    page_size = 6
+    page_size = PAGE_SIZE
     page_size_query_param = 'limit'
-    max_page_size = 100
+    max_page_size = MAX_PAGE
 
     def get_ordering(self, request, queryset, view):
         return ['id']
@@ -143,7 +144,7 @@ class UserProfileViewSet(UserViewSet):
 
 
 class RecipePagination(PageNumberPagination):
-    page_size = 6
+    page_size = PAGE_SIZE
     page_size_query_param = 'limit'
 
 
